@@ -85,7 +85,6 @@ function initMap() {
 	lat = place.geometry.location.lat();
 	lng = place.geometry.location.lng();
 	s = Math.sqrt((lat - near_lat)*(lat - near_lat) + (lng - near_lng)*(lng - near_lng));
-	alert(s);
 	
 	for (var i = 1; i < 8; i++) {
 		s_i = Math.sqrt((lat - data_drones[i][0])*(lat - data_drones[i][0]) + (lng - data_drones[i][1])*(lng - data_drones[i][1]));
@@ -95,14 +94,12 @@ function initMap() {
 			near_lng = data_drones[i][1];
 		}
 	}
-	alert(s);
-	near = new google.maps.LatLng(near_lat,near_lng);
-	
-	//alert( place.geometry.location.lat() + " " + place.geometry.location.lng() );
+	var near = new google.maps.LatLng(near_lat,near_lng);
+	var nearbounds = new google.maps.LatLngBounds(near,near);
 
     // If the place has a geometry, then present it on a map.
     if (place.geometry.viewport) {
-      map.fitBounds(place.geometry.viewport);
+      map.fitBounds(nearbounds);
     } else {
       map.setCenter(near);
       map.setZoom(17);  // Why 17? Because it looks good.
@@ -126,12 +123,8 @@ function initMap() {
       ].join(' ');
     }
 
-    /*infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-    infowindow.open(map, marker);*/
   });
 
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
   function setupClickListener(id, types) {
     var radioButton = document.getElementById(id);
     radioButton.addEventListener('click', function() {
